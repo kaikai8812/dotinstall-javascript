@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Javascript practice</title>
+    <style>
+      body {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .box {
+        width: 100px;
+        height: 100px;
+        background: skyblue;
+        cursor: pointer;
+        transition: 1s;
+        margin: 0 8px 8px 0;
+        text-align: center;
+        line-height: 100px;
+      }
+      .win {
+        background: pink;
+        border-radius: 50%;
+        transform: rotate(360deg);
+      }
+      .lose {
+        background: blue;
+        border-radius: 50%;
+        transform: scale(0.8);
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      "use strict";
+
+      const num = 50;
+      const winner = Math.floor(Math.random() * num);
+      // for文の外で、winnerとなる数字を確定している（０〜４の数字にどれかが、winnerに入っている。）
+      for (let i = 0; i < num; i++) {
+        const div = document.createElement("div");
+        div.classList.add("box");
+        div.addEventListener("click", () => {
+          if (i === winner) {
+            div.textContent = "Win!!";
+            div.classList.add("win");
+          } else {
+            div.textContent = "lose..";
+            div.classList.add("lose");
+          }
+        });
+
+        document.body.appendChild(div);
+      }
+    </script>
+  </body>
+</html>
