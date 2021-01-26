@@ -411,6 +411,11 @@ class Post{
       this.show()
     }
   }
+
+  // 静的メソッド
+  static showInfo(){
+    console.log("静的メソッドです。");
+  }
 }
 
 const posts =[
@@ -421,4 +426,52 @@ const posts =[
 posts[0].like();
 posts[0].eternal();
 
+Post.showInfo()
 // setInterval(posts[0].like,1000)
+
+// クラスの継承ー勉強
+
+'use strict';
+
+{
+  class Post {
+    constructor(text) {
+      this.text = text;
+      this.likeCount = 0;
+    }
+
+    show() {
+      console.log(`${this.text} - ${this.likeCount} likes`);
+      console.log(`${this.text} - ${this.likeCount} like`);
+    }
+
+    like() {
+      this.likeCount++;
+      this.show();
+    }
+  }
+
+  class SponsoredPost extends Post {
+    constructor(text, sponsor) {
+      super(text)
+      this.sponsor = sponsor;
+    }
+
+    show() {
+      // console.log(`${this.text} - ${this.likeCount} likes`);
+      super.show()
+      console.log(`... sponsored by ${this.sponsor}`);
+    }
+
+
+  }
+
+  const posts = [
+    new Post('JavaScriptの勉強中…'),
+    new Post('プログラミング楽しい！'),
+    new SponsoredPost('3分動画でマスターしよう', 'dotinstall'),
+  ];
+
+  posts[2].show();
+  posts[2].like();
+}
