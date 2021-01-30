@@ -1,8 +1,9 @@
 'use strict';
 // console.clear();
 {
-  const year = 2020;
-  const month = 4;  //５月を表している。
+  const today = new Date();
+  let year = today.getFullYear();
+  let month = today.getMonth();
 
   // ↓先月分の日にちを作成するための記述
     function getCalenderHead(){
@@ -47,17 +48,92 @@
         isDisabled: false,
       });
     }
+
+    if (year === today.getFullYear() && month === today.getMonth() ){
+      dates[today.getDate() - 1].isToday = true
+    }
+
    return dates;
   }
 
-  function createCalendar(){
-    const dates = [
-      ...getCalenderHead(),
-      ...getCalenderBody(),
-      ...getCalenderTails(),
-    ];
-    console.log(dates)
+    function clearCalendar(){
+      const tbody = document.querySelector('tbody');
 
+      while(tbody.firstChild){                  //tbodyの小要素であるtrを全て消すため
+        tbody.removeChild(tbody.firstChild);    //親要素が持つ小要素を全部消す時に使う。
+      }
+    }
+
+    function renderTitle(){
+      const title = `${year}/${String(month + 1).padStart(2,'0')}`;                 // padStart---１桁の値だけど、前に0をつけたい時とかに、padStartを使う。ただし、文字列にしか使えないので、今回はstring()で、数字を文字列に変換している。
+      document.getElementById('title').textContent = title;
+    }
+
+    function renderWeeks(){
+      const dates = [
+        ...getCalenderHead(),
+        ...getCalenderBody(),
+        ...getCalenderTails(),
+      ];
+      const weeks = [];
+      const weeksCount = dates.length / 7 ;     //何週間あるかを抽出
+      for (let i = 0; i<7; i++){
+        weeks.push(dates.splice(0,7));          //dates配列の０番目から、７個分の数値をweeksにpushする。
+      }
+// ↓作成したweeksを実際にhtml内に保存していく処理。†
+      weeks.forEach(week => {
+        const tr = document.createElement('tr');
+          week.forEach(date => {
+           const td = document.createElement('td');
+           td.textContent = date.date;
+           if(date.isToday){
+             td.classList.add('today');
+           };
+           if(date.isDisabled){
+             td.classList.add('disabled');
+           };
+           tr.appendChild(td)
+          })
+          document.querySelector('tbody').appendChild(tr);
+      })
+    }
+
+  function createCalendar(){      //全てのカレンダーを統合する。
+    clearCalendar();
+    renderTitle();
+    renderWeeks();
   }
+
   createCalendar();
+
+  //↓ 来月と、先月へいくボタンの処理。
+
+  document.getElementById('prev').addEventListener('click',() =>{
+    month--;
+    if (month < 0){
+      year--;
+      month = 11;
+    }
+
+    createCalendar();
+  })
+
+  document.getElementById('next').addEventListener('click',() =>{
+    month++;
+    if (month > 11){
+      year++;
+      month = 0;
+    }
+
+    createCalendar();
+  })
+
+  //↑ 来月と、先月へいくボタンの処理。
+
+  document.getElementById('today').addEventListener('click',() =>{
+    year = today.getFullYear();
+    month = today.getMonth();
+
+    createCalendar();
+  })
 }
